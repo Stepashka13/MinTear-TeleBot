@@ -10,9 +10,20 @@ def button_message(message):
     markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1=types.KeyboardButton("Youtube")
     markup.add(item1)
-    bot.send_message(message.chat.id,'Выберите что вам надо',reply_markup=markup)
+    bot.send_message(message.chat.id, 'Выберите что вам надо', reply_markup=markup)
 @bot.message_handler(content_types='text')
 def message_reply(message):
     if message.text=="Youtube":
         bot.send_message(message.chat.id,"https://www.youtube.com/@ItsMinTear")
+ВОТ ОТСЮДА НЕ РАБОТАЕТ
+@bot.message_handler(content_types='text')
+def message_replys(message):
+    if message.text=="Steam":
+        bot.send_message(message.chat.id,"DDD")
+@bot.message_handler(commands=['Выбор'])
+def button_message(message):
+        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item2 = types.KeyboardButton("Steam")
+        markup1.add(item2)
+        bot.send_message(message.chat.id, 'Выберите что вам надо', reply_markup=markup1)
 bot.infinity_polling()
