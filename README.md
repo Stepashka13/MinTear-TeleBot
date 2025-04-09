@@ -1,0 +1,1 @@
+# MInTear-NE-ZABUD-UBRAT-TOKEN
