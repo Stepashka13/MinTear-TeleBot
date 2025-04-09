@@ -1,0 +1,18 @@
+from telebot import types
+import telebot
+bot=telebot.TeleBot("")
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.send_message(message.chat.id,'Привет')
+    bot.send_message(message.chat.id, 'Пропиши "/Выбор"')
+@bot.message_handler(commands=['Выбор'])
+def button_message(message):
+    markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1=types.KeyboardButton("Youtube")
+    markup.add(item1)
+    bot.send_message(message.chat.id,'Выберите что вам надо',reply_markup=markup)
+@bot.message_handler(content_types='text')
+def message_reply(message):
+    if message.text=="Youtube":
+        bot.send_message(message.chat.id,"https://www.youtube.com/@ItsMinTear")
+bot.infinity_polling()
