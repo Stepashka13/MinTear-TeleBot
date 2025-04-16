@@ -1,29 +1,21 @@
+
 from telebot import types
 import telebot
 bot=telebot.TeleBot("")
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id,'Привет')
-    bot.send_message(message.chat.id, 'Пропиши "/Выбор"')
-@bot.message_handler(commands=['Выбор'])
+    bot.send_message(message.chat.id, 'Пропиши "/Info"')
+@bot.message_handler(commands=['Info'])
 def button_message(message):
     markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1=types.KeyboardButton("Youtube")
+    item1=types.KeyboardButton("Information")
     markup.add(item1)
-    bot.send_message(message.chat.id, 'Выберите что вам надо', reply_markup=markup)
+    bot.send_message(message.chat.id, 'Вся информация по кнопке "Information":', reply_markup=markup)
 @bot.message_handler(content_types='text')
 def message_reply(message):
-    if message.text=="Youtube":
-        bot.send_message(message.chat.id,"https://www.youtube.com/@ItsMinTear")
-ВОТ ОТСЮДА НЕ РАБОТАЕТ
-@bot.message_handler(content_types='text')
-def message_replys(message):
-    if message.text=="Steam":
-        bot.send_message(message.chat.id,"DDD")
-@bot.message_handler(commands=['Выбор'])
-def button_message(message):
-        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        item2 = types.KeyboardButton("Steam")
-        markup1.add(item2)
-        bot.send_message(message.chat.id, 'Выберите что вам надо', reply_markup=markup1)
+    if message.text=="Information":
+        bot.send_message(message.chat.id,"Ютеб: https://www.youtube.com/@ItsMinTear ; Стеем: steamcommunity.com/profiles/76561199155817070 ; Твиткч : m.twitch.tv/mintear0k/home ; Тилиграмм : t.me/EtoMinTear")
+
+
 bot.infinity_polling()
