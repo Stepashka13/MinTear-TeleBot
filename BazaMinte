@@ -1,6 +1,6 @@
-
 from telebot import types
 import telebot
+import random
 bot=telebot.TeleBot("")
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -23,6 +23,22 @@ def message_reply(message):
         markup1.add(item2)
         markup1.add(item3)
         bot.send_message(message.chat.id, 'Выбирай:', reply_markup=markup1)
+ВОТ ОТСЮДА НЕ ЗНАЮ ЧО НЕ РАБОТАЕТ
 
 
+
+@bot.message_handler(content_types='text')
+def math_message(message):
+    if message.text =="math":
+        bot.send_message(message.chat.id, "Теперь способ:")
+        markup2 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item6 = types.KeyboardButton("+")
+        item5 = types.KeyboardButton("-")
+        item7 = types.KeyboardButton("*")
+        item4 = types.KeyboardButton("/")
+        markup2.add(item4)
+        markup2.add(item5)
+        markup2.add(item6)
+        markup2.add(item7)
+        bot.send_message(message.chat.id, 'Выбирай:', reply_markup=markup2)
 bot.infinity_polling()
