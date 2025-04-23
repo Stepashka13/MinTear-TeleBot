@@ -16,10 +16,13 @@ def button_message(message):
 def message_reply(message):
     if message.text=="Information":
         bot.send_message(message.chat.id,"Ютеб: https://www.youtube.com/@ItsMinTear ; Стеем: steamcommunity.com/profiles/76561199155817070 ; Твиткч : m.twitch.tv/mintear0k/home ; Тилиграмм : t.me/EtoMinTear")
-        bot.send_message(message.chat.id, "Так же я могу подсчитать тебе какие нибудь там задачки, если напишешь 'Математика'")
-@bot.message_handler(content_types='text')
-def perehod_hoda(message):
-    if message.text=="Математика":
-        bot.send_message(message.chat.id, "Выбери тип задач, которые мне доступны по кнопке:")
+        bot.send_message(message.chat.id, "Так же я могу подсчитать тебе какие-нибудь задачи или примеры, если напишешь 'math' (Подсчёт примеров) или 'phys' (для решения задач)." )
+        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item2 = types.KeyboardButton("math")
+        item3 = types.KeyboardButton("phys")
+        markup1.add(item2)
+        markup1.add(item3)
+        bot.send_message(message.chat.id, 'Выбирай:', reply_markup=markup1)
+
 
 bot.infinity_polling()
