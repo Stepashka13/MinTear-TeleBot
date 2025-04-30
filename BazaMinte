@@ -1,7 +1,7 @@
 import telebot
 from telebot import types
 
-API_TOKEN = ""
+API_TOKEN = ''  # Замените на ваш токен
 bot = telebot.TeleBot(API_TOKEN)
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -44,6 +44,73 @@ def calculate_result(message, action):
         bot.send_message(message.chat.id, f"Результат: {result}")
     except ValueError:
         bot.send_message(message.chat.id, "введи два числа через пробел.")
+
+@bot.message_handler(commands=['phys'])
+def choose_physics_problem(message):
+    markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    markup.add('Сила', 'Скорость', 'Энергия', 'Работа')
+    bot.send_message(message.chat.id, "Выберите задачу по физике:", reply_markup=markup)
+
+@bot.message_handler(func=lambda message: message.text in ['Сила', 'Скорость', 'Энергия', 'Работа'])
+def perform_physics_action(message):
+    problem = message.text
+    if problem == 'Сила':
+        bot.send_message(message.chat.id, "Введи массу (кг) и ускорение (м/с²) через пробел:")
+        bot.register_next_step_handler(message, calculate_force)
+    elif problem == 'Скорость':
+        bot.send_message(message.chat.id, "Введи расстояние (м) и время (с) через пробел:")
+        bot.register_next_step_handler(message, calculate_speed)
+    elif problem == 'Энергия':
+        bot.send_message(message.chat.id, "Введи массу (кг) и высоту (м) через пробел:")
+        bot.register_next_step_handler(message, calculate_energy)
+    elif problem == 'Работа':
+        bot.send_message(message.chat.id, "Введи силу (Н) и расстояние (м) через пробел:")
+        bot.register_next_step_handler(message, calculate_work)
+
+def calculate_force(message):
+    try:
+        mass, acceleration = map(float, message.text.split())
+        force = mass * acceleration
+        bot.send_message(message.chat.id, f"Сила: {force} Н")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи массу и ускорение через пробел.")
+
+def calculate_speed(message):
+    try:
+        distance, time = map(float, message.text.split())
+        speed = distance / time
+        bot.send_message(message.chat.id, f"Скорость: {speed} м/с")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи расстояние и время через пробел.")
+
+def calculate_energy(message):
+    try:
+        mass, height = map(float, message.text.split())
+        energy = mass * 10 * height  # Учитываем ускорение свободного падения
+        bot.send_message(message.chat.id, f"Энергия: {energy} Дж")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
+
+
+def calculate_work(message):
+    try:
+        force, distance = map(float, message.text.split())
+        work = force * distance
+        bot.send_message(message.chat.id, f"Работа: {work} Вт")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
+
+@bot.message_handler(commands=['Info1'])
+def button_mesage(message):
+    bot.send_message(message.chat.id,
+                     "https://www.youtube.com/@stepa_shka1989")
+    bot.send_message(message.chat.id, 'Найдена секретка. Создатель этого бота - stepashka')
+
+@bot.message_handler(commands=['dota'])
+def button_ofdota(message):
+    bot.send_message(message.chat.id,
+                     "https://ru.dotabuff.com/players/1556894673")
+    bot.send_message(message.chat.id, 'Найдена секретка.')
 
 
 bot.polling()
