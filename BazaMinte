@@ -2,7 +2,7 @@ import telebot
 import time
 from telebot import types
 user_states = {}
-API_TOKEN = "" # Замените на ваш токен
+API_TOKEN = 
 bot = telebot.TeleBot(API_TOKEN)
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -44,10 +44,11 @@ def calculate_result(message, action):
             result = num1 * num2
         elif action == 'Деление':
             result = num1 / num2 if num2 != 0 else "Я не буду делить на ноль! Выбери действие ещё раз."
-
+        bot.send_message(message.chat.id, "Хммммппп")
+        time.sleep(5)
         bot.send_message(message.chat.id, f"Результат: {result}")
     except ValueError:
-        bot.send_message(message.chat.id, "введи два числа через пробел.")
+        bot.send_message(message.chat.id, "введи два числа через пробел, но сначало выбери действие ещё раз.")
 
 @bot.message_handler(commands=['phys'])
 def choose_physics_problem(message):
@@ -75,6 +76,8 @@ def calculate_force(message):
     try:
         mass, acceleration = map(float, message.text.split())
         force = mass * acceleration
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Сила: {force} Н")
     except ValueError:
         bot.send_message(message.chat.id, "введи массу и ускорение через пробел.")
@@ -83,6 +86,8 @@ def calculate_speed(message):
     try:
         distance, time = map(float, message.text.split())
         speed = distance / time
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Скорость: {speed} м/с")
     except ValueError:
         bot.send_message(message.chat.id, "введи расстояние и время через пробел.")
@@ -91,6 +96,8 @@ def calculate_energy(message):
     try:
         mass, height = map(float, message.text.split())
         energy = mass * 10 * height  # Учитываем ускорение свободного падения
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Энергия: {energy} Дж")
     except ValueError:
         bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
@@ -100,6 +107,8 @@ def calculate_work(message):
     try:
         force, distance = map(float, message.text.split())
         work = force * distance
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Работа: {work} Вт")
     except ValueError:
         bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
