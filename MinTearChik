@@ -1,0 +1,150 @@
+import telebot
+import time
+from telebot import types
+user_states = {}
+API_TOKEN = '7908059670:AAH8NaHDkqUWlL-oDjQkgT1m6rl4rKuPPhM'  # Замените на ваш токен
+bot = telebot.TeleBot(API_TOKEN)
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.send_message(message.chat.id, "*Компьютер запускается, ожидайте...*")
+    time.sleep(3)
+    bot.send_message(message.chat.id, "**Компьютер включен**")
+    bot.send_message(message.chat.id,'Привет')
+    bot.send_message(message.chat.id, 'Пропиши "/Info"')
+@bot.message_handler(commands=['Info'])
+def button_message(message):
+        bot.send_message(message.chat.id,"Ютеб: https://www.youtube.com/@ItsMinTear ; Стеем: steamcommunity.com/profiles/76561199155817070 ; Твиткч : m.twitch.tv/mintear0k/home ; Тилиграмм : t.me/EtoMinTear")
+        bot.send_message(message.chat.id, "Так же я могу подсчитать тебе какие-нибудь задачи или примеры, если напишешь '/math' (Подсчёт примеров) или '/phys' (для решения задач)." )
+        bot.send_message(message.chat.id, 'Выбирай:')
+
+@bot.message_handler(commands=['math'])
+def choose_math_action(message):
+    markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    markup.add('Сложение', 'Вычитание', 'Умножение', 'Деление')
+    bot.send_message(message.chat.id, "Выберите действие:", reply_markup=markup)
+
+
+@bot.message_handler(func=lambda message: message.text in ['Сложение', 'Вычитание', 'Умножение', 'Деление'])
+def perform_math_action(message):
+    action = message.text
+    bot.send_message(message.chat.id, f"Ты выбрал: {action}. Введи два числа через пробел:")
+
+    # Сохраняем действие для дальнейшего использования
+    bot.register_next_step_handler(message, lambda msg: calculate_result(msg, action))
+
+
+def calculate_result(message, action):
+    try:
+        num1, num2 = map(float, message.text.split())
+        if action == 'Сложение':
+            result = num1 + num2
+        elif action == 'Вычитание':
+            result = num1 - num2
+        elif action == 'Умножение':
+            result = num1 * num2
+        elif action == 'Деление':
+            result = num1 / num2 if num2 != 0 else "Я не буду делить на ноль! Выбери действие ещё раз."
+        bot.send_message(message.chat.id, "Хммммппп")
+        time.sleep(5)
+        bot.send_message(message.chat.id, f"Результат: {result}")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи два числа через пробел, но сначало выбери действие ещё раз.")
+
+@bot.message_handler(commands=['phys'])
+def choose_physics_problem(message):
+    markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    markup.add('Сила', 'Скорость', 'Энергия', 'Работа')
+    bot.send_message(message.chat.id, "Выберите задачу по физике:", reply_markup=markup)
+
+@bot.message_handler(func=lambda message: message.text in ['Сила', 'Скорость', 'Энергия', 'Работа'])
+def perform_physics_action(message):
+    problem = message.text
+    if problem == 'Сила':
+        bot.send_message(message.chat.id, "Введи массу (кг) и ускорение (м/с²) через пробел:")
+        bot.register_next_step_handler(message, calculate_force)
+    elif problem == 'Скорость':
+        bot.send_message(message.chat.id, "Введи расстояние (м) и время (с) через пробел:")
+        bot.register_next_step_handler(message, calculate_speed)
+    elif problem == 'Энергия':
+        bot.send_message(message.chat.id, "Введи массу (кг) и высоту (м) через пробел:")
+        bot.register_next_step_handler(message, calculate_energy)
+    elif problem == 'Работа':
+        bot.send_message(message.chat.id, "Введи силу (Н) и расстояние (м) через пробел:")
+        bot.register_next_step_handler(message, calculate_work)
+
+def calculate_force(message):
+    try:
+        mass, acceleration = map(float, message.text.split())
+        force = mass * acceleration
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
+        bot.send_message(message.chat.id, f"Сила: {force} Н")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи массу и ускорение через пробел.")
+
+def calculate_speed(message):
+    try:
+        distance, time = map(float, message.text.split())
+        speed = distance / time
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
+        bot.send_message(message.chat.id, f"Скорость: {speed} м/с")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи расстояние и время через пробел.")
+
+def calculate_energy(message):
+    try:
+        mass, height = map(float, message.text.split())
+        energy = mass * 10 * height  # Учитываем ускорение свободного падения
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
+        bot.send_message(message.chat.id, f"Энергия: {energy} Дж")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
+
+
+def calculate_work(message):
+    try:
+        force, distance = map(float, message.text.split())
+        work = force * distance
+        bot.send_message(message.chat.id, "Хммммпппп")
+        time.sleep(3)
+        bot.send_message(message.chat.id, f"Работа: {work} Вт")
+    except ValueError:
+        bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
+
+@bot.message_handler(commands=['Info1'])
+def button_mesage(message):
+    bot.send_message(message.chat.id,
+                     "https://www.youtube.com/@stepa_shka1989")
+    bot.send_message(message.chat.id, 'Найдена секретка. Создатель этого бота - stepashka')
+
+@bot.message_handler(commands=['dota'])
+def button_ofdota(message):
+    bot.send_message(message.chat.id,
+                     "https://ru.dotabuff.com/players/1556894673")
+    bot.send_message(message.chat.id, 'Найдена секретка.')
+
+@bot.message_handler(commands=['donat'])
+def button_ofdota(message):
+    bot.send_message(message.chat.id,
+                     "https://www.donationalerts.com/r/stepa_shka1")
+    bot.send_message(message.chat.id, 'Найдена секретка. Задонать для будущих обновлений')
+
+@bot.message_handler(commands=['stop'])
+def stop_bot(message):
+    user_id = message.from_user.id
+    user_states[user_id] = 'stopped'
+    bot.reply_to(message, "Компьютер выключен. Чтобы включить, напиши /start.")
+
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    user_id = message.from_user.id
+    if user_states.get(user_id) == 'stopped':
+        bot.reply_to(message, "Компьютер выключен. Напишите /start, чтобы включить.")
+    else:
+        bot.reply_to(message, f"Вы написали: {message.text}")
+
+
+
+bot.polling()
