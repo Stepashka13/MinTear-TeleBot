@@ -14,7 +14,7 @@ def start_message(message):
 @bot.message_handler(commands=['Info'])
 def button_message(message):
         bot.send_message(message.chat.id,"Ютеб: https://www.youtube.com/@ItsMinTear ; Стеем: steamcommunity.com/profiles/76561199155817070 ; Твиткч : m.twitch.tv/mintear0k/home ; Тилиграмм : t.me/EtoMinTear")
-        bot.send_message(message.chat.id, "Так же я могу подсчитать тебе какие-нибудь задачи или примеры, если напишешь '/math' (Подсчёт примеров) или '/phys' (для решения задач)." )
+        bot.send_message(message.chat.id, "Я могу подсчитать тебе какие-нибудь задачи или примеры, если напишешь '/math' (Подсчёт примеров) или '/phys' (для решения задач)." )
         bot.send_message(message.chat.id, 'Выбирай:')
 
 @bot.message_handler(commands=['math'])
