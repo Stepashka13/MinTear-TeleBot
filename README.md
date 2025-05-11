@@ -7,4 +7,5 @@ MinTearKa
 Спасибо : А.А.Т (TeacherOfIT)                                                             
 Бот для развлечения и решения задач по физике и математике : MinTearB_bot                                                             
 Прописать в Боте команду /donat : Нужно                                                             
+Discord : stepashkalox                                                                                                              
 Спасибо за прочтение README : Тебе                                                             
