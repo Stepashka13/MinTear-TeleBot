@@ -1,4 +1,4 @@
-MinTearKa
+MinTearKa                                                             
 Создатель Бота : https://www.youtube.com/@stepa_shka1989 (stepashka)                                                             
 На ком основан Бот : https://www.youtube.com/@ItsMinTear (MinTear)                                                             
 Основа Бота : Уникум (Уникум)                                                             
