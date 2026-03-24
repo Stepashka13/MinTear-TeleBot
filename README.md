@@ -1,6 +1,5 @@
 MinTearKa                                                             
-Создатель Бота : https://www.youtube.com/@stepa_shka1989 (stepashka)                                                             
-На ком основан Бот : https://www.youtube.com/@ItsMinTear (MinTear)                                                             
+Создатель Бота : https://www.youtube.com/@stepa_shka1989 (stepashka)                                                                                                                    
 Основа Бота : Уникум (Уникум)                                                             
 Токен Бота : Нет (Token)                                                             
 Помощь по Боту : blackbox.ai , min.tear                                                                                                            
