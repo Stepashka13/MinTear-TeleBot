@@ -1,0 +1,22 @@
+from sympy import symbols, Eq, solve
+
+def solve_system():
+    # 1. Определяем переменные как символы
+    x, y = symbols('x y')
+
+    # 2. Описываем уравнения системы
+    # Eq(левая_часть, правая_часть)
+    equation1 = Eq(x**2 * y**2, 36)
+    equation2 = Eq(x + y**2, 13)
+
+    # 3. Решаем систему
+    solutions = solve((equation1, equation2), (x, y))
+
+    return solutions
+
+# Вывод результата
+result = solve_system()
+print("Найденные решения (x, y):")
+for sol in result:
+    print(f"x = {sol[0]}, y = {sol[1]}")
+
