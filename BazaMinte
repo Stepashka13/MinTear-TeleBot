@@ -1,11 +1,10 @@
 import telebot
 import time
 from telebot import types
-from PIL import Image
-import pytesseract
-import io
+import requests
+import json
 user_states = {}
-API_TOKEN = ""
+API_TOKEN = "7908059670:AAH8NaHDkqUWlL-oDjQkgT1m6rl4rKuPPhM"
 bot = telebot.TeleBot(API_TOKEN)
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -16,14 +15,13 @@ def start_message(message):
     bot.send_message(message.chat.id, 'Пропиши "/Info"')
 @bot.message_handler(commands=['Info'])
 def button_message(message):
-        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-        markup.add("math", 'phys')
-        bot.send_message(message.chat.id, "Выберите предмет: ", reply_markup=markup)
+        bot.send_message(message.chat.id, "Я могу подсчитать тебе какие-нибудь задачи или примеры, если напишешь '/math' (Подсчёт примеров) или '/phys' (для решения задач)." )
+        bot.send_message(message.chat.id, 'Выбирай:')
 
 @bot.message_handler(commands=['math'])
 def choose_math_action(message):
     markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-    markup.add('Сложение', 'Вычитание', 'Умножение', 'Деление', 'Система уравнений')
+    markup.add('Сложение', 'Вычитание', 'Умножение', 'Деление', 'Ввод системы', 'Фото системы')
     bot.send_message(message.chat.id, "Выберите действие:", reply_markup=markup)
 
 
@@ -31,23 +29,36 @@ def choose_math_action(message):
 def perform_math_action(message):
     action = message.text
     bot.send_message(message.chat.id, f"Ты выбрал: {action}. Введи два числа через пробел:")
-
     bot.register_next_step_handler(message, lambda msg: calculate_result(msg, action))
-@bot.message_handler(func=lambda message: message.text in ['Система уравнений'])
-def perform_math_action0(message):
+
+@bot.message_handler(func=lambda message: message.text in ['Ввод системы'])
+def ollamaxyama(message):
     action = message.text
-    bot.send_message(message.chat.id, f"Ты выбрал: {action}. Сфотографируй данные.")
-    bot.register_next_step_handler(message, lambda msg: calculate_result0(msg, action))
+    bot.send_message(message.chat.id, f"Ты выбрал: {action}. Введи два выражения через пробел:")
+    bot.register_next_step_handler(message, lambda msg: calculate_result1(msg, action))
+def calculate_result1(message, action):
+    user_input = message.text
+    bot.send_message(message.chat.id, "🤖 minter думает над решением...")
 
-def calculate_result0(message, action):
-    if action == 'система уравнений':
-        file_id = message.photo[-1].file_id
-        file_info = bot.get_file(file_id)
-        downloaded_file = bot.download_file(file_info.file_path)
-        image = Image.open(io.BytesIO(downloaded_file))
-        text1 = pytesseract.image_to_string(image, lang='rus+eng')
-        bot.reply_to(message, f"Распознанный текст:\n{text1}")
+    url = "http://localhost:11434/api/generate"
+    payload = {
+            "model": "llama3",
+            "prompt": f"Реши систему уравнений и дай краткий ответ: {user_input}",
+            "stream": False
+        }
 
+    try:
+            response = requests.post(url, json=payload, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                answer = data.get('response', 'Не удалось получить ответ.')
+                bot.send_message(message.chat.id, f"✅ Ответ от minter:\n{answer}")
+            else:
+                bot.send_message(message.chat.id, "Pizda")
+        
+    except Exception as e:
+            bot.send_message(message.chat.id, f"⚠️ Произошла ошибка: {str(e)}")
 
 def calculate_result(message, action):
     try:
@@ -60,8 +71,23 @@ def calculate_result(message, action):
             result = num1 * num2
         elif action == 'Деление':
             result = num1 / num2 if num2 != 0 else "Я не буду делить на ноль! Выбери действие ещё раз."
+        elif action == "Ввод системы":
+            equations_text = message.text.replace(" ", "").split(",")
+            symbols = sp.symbols('x y z')
+            eqs = []
+            
+            for eq_str in equations_text:
+                side_a, side_b = eq_str.split('=')
+                eqs.append(sp.Eq(sp.sympify(side_a), sp.sympify(side_b)))
+            
+            solution = sp.solve(eqs)
+            bot.send_message(message.chat.id, f"Решение системы: {solution}")
+
+    except Exception as e:
+        bot.send_message(message.chat.id, "Ошибка! Проверь формат ввода. Попробуй еще раз.")
+
         bot.send_message(message.chat.id, "Хммммппп")
-        time.sleep(1)
+        time.sleep(5)
         bot.send_message(message.chat.id, f"Результат: {result}")
     except ValueError:
         bot.send_message(message.chat.id, "введи два числа через пробел, но сначало выбери действие ещё раз.")
@@ -93,7 +119,7 @@ def calculate_force(message):
         mass, acceleration = map(float, message.text.split())
         force = mass * acceleration
         bot.send_message(message.chat.id, "Хммммпппп")
-        time.sleep(1)
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Сила: {force} Н")
     except ValueError:
         bot.send_message(message.chat.id, "введи массу и ускорение через пробел.")
@@ -103,7 +129,7 @@ def calculate_speed(message):
         distance, time = map(float, message.text.split())
         speed = distance / time
         bot.send_message(message.chat.id, "Хммммпппп")
-        time.sleep(1)
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Скорость: {speed} м/с")
     except ValueError:
         bot.send_message(message.chat.id, "введи расстояние и время через пробел.")
@@ -113,7 +139,7 @@ def calculate_energy(message):
         mass, height = map(float, message.text.split())
         energy = mass * 10 * height  # Учитываем ускорение свободного падения
         bot.send_message(message.chat.id, "Хммммпппп")
-        time.sleep(1)
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Энергия: {energy} Дж")
     except ValueError:
         bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
@@ -124,7 +150,7 @@ def calculate_work(message):
         force, distance = map(float, message.text.split())
         work = force * distance
         bot.send_message(message.chat.id, "Хммммпппп")
-        time.sleep(1)
+        time.sleep(3)
         bot.send_message(message.chat.id, f"Работа: {work} Вт")
     except ValueError:
         bot.send_message(message.chat.id, "введи массу и высоту через пробел.")
